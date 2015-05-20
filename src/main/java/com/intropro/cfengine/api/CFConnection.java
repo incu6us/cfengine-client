@@ -14,6 +14,7 @@ import com.sun.jersey.api.client.filter.LoggingFilter;
 
 public class CFConnection {
 
+	private String server;
 	private Client client;
 	private boolean debug = false;
 
@@ -32,13 +33,22 @@ public class CFConnection {
 		this.debug = debug;
 	}
 
+	public String getServer() {
+		return server;
+	}
+
+	public void setServer(String server) {
+		this.server = server;
+	}
+
 	/**
 	 * Get connection with username and password
 	 * 
 	 * @param username
 	 * @param password
 	 */
-	public Client connect(String username, String password) {
+	public Client connect(String server, String username, String password) {
+		this.server = server;
 		client = ClientHelper.createClient();
 		if (debug)
 			client.addFilter(new LoggingFilter());
@@ -52,7 +62,7 @@ public class CFConnection {
 	 * 
 	 * @param server
 	 */
-	public Api getApiResponse(String server) {
+	public Api getApiResponse() {
 		WebResource webResource = client.resource("https://" + server).path("/api/");
 		ClientResponse response = webResource.header(HttpHeaders.USER_AGENT, "jersey-client").accept(CFEngineMimeType.CFENGINE).get(ClientResponse.class);
 
